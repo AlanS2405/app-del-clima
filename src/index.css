@@ -51,6 +51,11 @@ img {
     border-radius: 0.5rem;    
 }
 
+.error {
+    text-align: center;
+    text-decoration: underline red;
+}
+
 .weather {
     display: flex;
     flex-direction: column;

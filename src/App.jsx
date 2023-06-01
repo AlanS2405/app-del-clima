@@ -10,9 +10,8 @@ function App() {
   const [coords, setCoords] = useState()
   const [weather, setWeather] = useState()
   const [temp, setTemp] = useState()
-  const objStyle = {
-    backgroundImage: `url('fondo-${weather?.weather[0].icon}.jpg')`
-  }
+  const [hasError, setHasError] = useState(false)
+  const objStyle = { backgroundImage: `url('fondo-${weather?.weather[0].icon}.jpg')` }
 
   useEffect(() => {
     const success = pos => {
@@ -22,7 +21,11 @@ function App() {
       }
       setCoords(obj)
     }
-    navigator.geolocation.getCurrentPosition(success)
+    const error = err => {
+      console.log(err);
+      setHasError(true)
+    }
+    navigator.geolocation.getCurrentPosition(success,error)
   }, [])
 
   useEffect(() => {
@@ -36,8 +39,12 @@ function App() {
           farenheit: ((res.data.main.temp - 273.15) * 9/5 + 32).toFixed(1)
         }
         setTemp(objTemp)
+        setHasError(false)
       })
-      .catch(err => console.log(err))
+      .catch(err => {
+        console.log(err)
+        setHasError(true)
+      })
     }
   }, [coords])
   
@@ -46,12 +53,15 @@ function App() {
     <div style={objStyle} className='container'>
       <h1 className='title'>Weather App</h1>
       <div className='app'>
-        { weather 
-          ? <WeatherCard 
-          weather = {weather}
-          temp = {temp}/>
-          : <Loading />
-        } 
+        {hasError 
+        ? (<h2 className='error'> Sin la autorización de geolocalización no es posible obtener los datos del clima 😢</h2>) 
+        : ( weather 
+            ? (<WeatherCard 
+                weather = {weather}
+                temp = {temp}/>)
+            : (<Loading />)
+          )
+        }
       </div>
     </div>
   )

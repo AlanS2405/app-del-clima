@@ -63,6 +63,7 @@ function App() {
           )
         }
       </div>
+      <h2 className='byme'>by Alan Solís</h2>
     </div>
   )
 }
